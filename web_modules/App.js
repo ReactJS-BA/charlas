@@ -21,8 +21,8 @@ var App = React.createClass({
          console.log("Error signing in", authHash);
          return null;
        }
+       window.location.hash = ""
      }
-     window.location.hash = ""
      return idToken;
    },
    logout: function() {
