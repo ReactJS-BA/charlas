@@ -20373,12 +20373,47 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
+	var _Home = __webpack_require__(169);
+
+	var _Home2 = _interopRequireDefault(_Home);
+
+	var _LoggedIn = __webpack_require__(170);
+
+	var _LoggedIn2 = _interopRequireDefault(_LoggedIn);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var App = _react2.default.createClass({
 	  displayName: 'App',
 
+	  componentWillMount: function componentWillMount() {
+	    this.lock = new Auth0Lock('kDM2xRJpjwa6aFfbM0TxChd5MsgKJ0n3', 'sebasjm.auth0.com');
+	    this.setState({ idToken: this.getIdToken() });
+	  },
+
+	  getIdToken: function getIdToken() {
+	    var idToken = localStorage.getItem('userToken');
+	    var authHash = this.lock.parseHash(window.location.hash);
+	    if (!idToken && authHash) {
+	      if (authHash.id_token) {
+	        idToken = authHash.id_token;
+	        localStorage.setItem('userToken', authHash.id_token);
+	      }
+	      if (authHash.error) {
+	        console.log("Error signing in", authHash);
+	        return null;
+	      }
+	    }
+	    window.location.hash = "";
+	    return idToken;
+	  },
+	  logout: function logout() {
+	    localStorage.removeItem('userToken');
+	    this.setState({ idToken: null });
+	  },
 	  render: function render() {
+	    var content = this.state.idToken ? _react2.default.createElement(_LoggedIn2.default, { lock: this.lock, idToken: this.state.idToken, logout: this.logout }) : _react2.default.createElement(_Home2.default, { lock: this.lock });
+
 	    return _react2.default.createElement(
 	      'div',
 	      null,
@@ -20396,9 +20431,121 @@
 	          'Propuestas y pedidos de charlas'
 	        )
 	      ),
+	      content
+	    );
+	  }
+	});
+
+	exports.default = App;
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(38);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Home = _react2.default.createClass({
+	  displayName: 'Home',
+
+	  showLock: function showLock() {
+	    this.props.lock.show();
+	  },
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'section',
+	      { className: 'main-content' },
 	      _react2.default.createElement(
+	        'div',
+	        { className: 'login-box' },
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          _react2.default.createElement(
+	            'a',
+	            { onClick: this.showLock },
+	            'Sign In'
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	exports.default = Home;
+
+/***/ },
+/* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(38);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var LoggedIn = _react2.default.createClass({
+	  displayName: 'LoggedIn',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      profile: null
+	    };
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    this.props.lock.getProfile(this.props.idToken, function (err, profile) {
+	      if (err) {
+	        console.log("Error loading the Profile", err);
+	        return;
+	      }
+	      this.setState({ profile: profile });
+	    }.bind(this));
+	  },
+	  render: function render() {
+	    if (this.state.profile) {
+	      return _react2.default.createElement(
 	        'section',
 	        { className: 'main-content' },
+	        _react2.default.createElement(
+	          'h2',
+	          { title: 'with token ' + this.props.idToken },
+	          'Welcome ',
+	          this.state.profile.nickname
+	        ),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          _react2.default.createElement(
+	            'a',
+	            { onClick: this.props.logout },
+	            'Logout'
+	          )
+	        ),
 	        _react2.default.createElement(
 	          'h3',
 	          null,
@@ -20469,12 +20616,18 @@
 	            '.'
 	          )
 	        )
-	      )
-	    );
+	      );
+	    } else {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'loading' },
+	        'Loading profile'
+	      );
+	    }
 	  }
 	});
 
-	exports.default = App;
+	exports.default = LoggedIn;
 
 /***/ }
 /******/ ]);
