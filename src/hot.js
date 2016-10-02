@@ -11,6 +11,7 @@ config.entry.main.unshift('webpack/hot/only-dev-server') // "only" prevents relo
 config.entry.main.unshift('webpack-dev-server/client?' + server.url) // WebpackDevServer host and port
 
 config.plugins.unshift(new webpack.HotModuleReplacementPlugin())
+config.devtool = 'eval' //faster builds
 
 new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,
