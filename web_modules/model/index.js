@@ -4,12 +4,12 @@ import { routerReducer } from 'react-router-redux';
 
 import user from './user';
 import github from './github';
+import space from './space';
 
 export { user, github }
 
 export default combineReducers({
-  user,
-  github,
+  user, github, space,
 //  form: formReducer,
   routing: routerReducer,
 });
