@@ -43,6 +43,6 @@
     "github-api": "^2.2.0"
   },
   "dependencies": {
-    "parse": "sebasjm/Parse-SDK-JS"
+    "parse": "sebasjm/Parse-SDK-JS#dist"
   }
 }
