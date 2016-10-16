@@ -16132,7 +16132,7 @@ webpackJsonp([0],[
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	_parse2.default.initialize("userspace");
-	_parse2.default.serverURL = "http://localhost:1337/main";
+	_parse2.default.serverURL = "http://user.space/main";
 	_parse2.default.login = function (creds) {
 	    _parse2.default.credentials = creds;
 	};
