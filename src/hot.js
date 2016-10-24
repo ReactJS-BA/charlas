@@ -3,7 +3,7 @@ var WebpackDevServer = require('webpack-dev-server');
 var config = require('../webpack.config');
 
 const server = {
-  host : '0.0.0.0', port : '8080'
+  host : '0.0.0.0', port : '8081'
 }
 server.url = 'http://' + server.host + ':' + server.port + '/'
 

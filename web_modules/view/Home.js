@@ -13,7 +13,7 @@ const Home = ({profile, spaces, waiting, actions}) =>
         <li key={item.id}>{item.value}</li>
     )}</ul>
     <h3><a onClick={actions.logout}>Logout</a></h3>
-    <h3><a href={`http://user.space/login/?token=${localStorage.id_token}`}}>Dashboard</a></h3>
+    <h3><a href={`http://user.space/login/?token=${localStorage.id_token}`}>Dashboard</a></h3>
     <Charlas />
   </section>
 
