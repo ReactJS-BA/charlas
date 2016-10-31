@@ -7705,7 +7705,7 @@ webpackJsonp([0],[
 	    _react2.default.createElement(
 	      'h3',
 	      null,
-	      ' Propuestas '
+	      ' Usuarios Registrados '
 	    ),
 	    _react2.default.createElement(
 	      'ul',
@@ -8254,6 +8254,11 @@ webpackJsonp([0],[
 	    var action = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	
 	    switch (action.type) {
+	        case LOGOUT:
+	            return _extends({}, state, {
+	                issues: [],
+	                repos: []
+	            });
 	        case ISSUES_REQUEST:
 	            return _extends({}, state, {
 	                issues: []
@@ -8264,7 +8269,7 @@ webpackJsonp([0],[
 	            });
 	        case REPOS_REQUEST:
 	            return _extends({}, state, {
-	                issues: []
+	                repos: []
 	            });
 	        case REPOS_RESPONSE:
 	            return _extends({}, state, {
@@ -15415,6 +15420,8 @@ webpackJsonp([0],[
 	
 	var _space = __webpack_require__(1099);
 	
+	var _userspace = __webpack_require__(1101);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var Home = function Home(_ref) {
@@ -15422,6 +15429,8 @@ webpackJsonp([0],[
 	  var spaces = _ref.spaces;
 	  var waiting = _ref.waiting;
 	  var actions = _ref.actions;
+	  var username = _ref.username;
+	  var token = _ref.token;
 	  return _react2.default.createElement(
 	    'section',
 	    { className: 'main-content' },
@@ -15429,7 +15438,7 @@ webpackJsonp([0],[
 	      'h2',
 	      null,
 	      'Welcome ',
-	      profile.nickname
+	      username
 	    ),
 	    'Items ',
 	    _react2.default.createElement(_view.InputText, { onClick: actions.add_space, text: 'agregar', enabled: !waiting }),
@@ -15458,7 +15467,7 @@ webpackJsonp([0],[
 	      null,
 	      _react2.default.createElement(
 	        'a',
-	        { href: 'http://user.space/login/?token=' + localStorage.id_token },
+	        { href: _userspace.urls.dashboard(token) },
 	        'Dashboard'
 	      )
 	    ),
@@ -15481,7 +15490,9 @@ webpackJsonp([0],[
 	  return {
 	    profile: state.user.profile,
 	    spaces: state.space.items,
-	    waiting: state.space.waiting
+	    waiting: state.space.waiting,
+	    username: state.user.id,
+	    token: state.user.token.token
 	  };
 	}, { logout: _user.logout, list_spaces: _space.list_spaces, add_space: _space.add_space })(HomeClass);
 	
@@ -15576,6 +15587,7 @@ webpackJsonp([0],[
 	var initialState = {
 	    loading: false,
 	    token: previous.token,
+	    id: !previous.profile ? ANON_USER : previous.profile.user_id,
 	    profile: !previous.profile ? ANON_USER : {
 	        name: previous.profile.nickname,
 	        avatar: previous.profile.picture
@@ -15599,6 +15611,7 @@ webpackJsonp([0],[
 	        case LOGIN_OK:
 	            return _extends({}, state, {
 	                token: action.payload.token,
+	                id: action.payload.profile.user_id,
 	                profile: {
 	                    name: action.payload.profile.nickname,
 	                    avatar: action.payload.profile.picture
@@ -16020,8 +16033,9 @@ webpackJsonp([0],[
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	var ToDo = _userspace.Parse.Object.extend("ToDo");
-	var query = new _userspace.Parse.Query(ToDo);
+	var Parse = (0, _userspace.userspace)('main');
+	var ToDo = Parse.Object.extend("ToDo");
+	var query = new Parse.Query(ToDo);
 	
 	exports.default = function (action$) {
 	    return _rxjs.Observable.merge(action$.ofType(event.SPACE_LIST_REQUEST).flatMap(function (action) {
@@ -16038,9 +16052,9 @@ webpackJsonp([0],[
 	            type: event.SPACE_LIST_REQUEST
 	        };
 	    }), action$.ofType(userEvent.LOGIN_OK).do(function (action) {
-	        return _userspace.Parse.login(action.payload.token.token);
+	        return Parse.login(action.payload.token.token);
 	    }).ignoreElements(), action$.ofType(event.LOGOUT).do(function (action) {
-	        return _userspace.Parse.logout();
+	        return Parse.logout();
 	    }).ignoreElements());
 	};
 	
@@ -16065,10 +16079,14 @@ webpackJsonp([0],[
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.SPACE_ADD_FAIL = exports.SPACE_ADD_RESPONSE = exports.SPACE_ADD_REQUEST = exports.SPACE_LIST_FAIL = exports.SPACE_LIST_RESPONSE = exports.SPACE_LIST_REQUEST = undefined;
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	exports.default = reducer;
+	
+	var _user = __webpack_require__(953);
+	
 	var SPACE_LIST_REQUEST = exports.SPACE_LIST_REQUEST = 'module/github/space/request';
 	var SPACE_LIST_RESPONSE = exports.SPACE_LIST_RESPONSE = 'module/github/space/response';
 	var SPACE_LIST_FAIL = exports.SPACE_LIST_FAIL = 'module/github/space/fail';
@@ -16100,6 +16118,7 @@ webpackJsonp([0],[
 	                    };
 	                })
 	            });
+	        case _user.LOGOUT:
 	        case SPACE_LIST_FAIL:
 	            return _extends({}, state, {
 	                waiting: false,
@@ -16118,12 +16137,12 @@ webpackJsonp([0],[
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/home/sebasjm/Work/github/charlas/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/home/sebasjm/Work/github/charlas/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 	
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.Parse = undefined;
+	exports.userspace = exports.urls = undefined;
 	
 	var _parse = __webpack_require__(1102);
 	
@@ -16131,18 +16150,34 @@ webpackJsonp([0],[
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	_parse2.default.initialize("userspace");
-	_parse2.default.serverURL = "http://user.space/main";
-	_parse2.default.login = function (creds) {
-	    _parse2.default.credentials = creds;
-	};
-	_parse2.default.logout = function () {
-	    _parse2.default.credentials = null;
+	var base = "http://localhost:1337";
+	
+	var urls = {
+	    dashboard: function dashboard(token) {
+	        return base + '/login/?token=' + token;
+	    }
 	};
 	
-	_parse2.default.login(localStorage.id_token);
+	function userspace(namespace) {
+	    var Parse = __webpack_require__(1102);
+	    Parse.initialize("userspace");
+	    Parse.serverURL = base + '/' + namespace;
+	    Parse.login = function (creds) {
+	        Parse.credentials = creds;
+	        urls.dashboard = function (token) {
+	            return base + '/login/?token=' + token;
+	        };
+	    };
+	    Parse.logout = function () {
+	        Parse.credentials = null;
+	    };
 	
-	exports.Parse = _parse2.default;
+	    Parse.login(localStorage.id_token);
+	    return Parse;
+	}
+	
+	exports.urls = urls;
+	exports.userspace = userspace;
 	
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/home/sebasjm/Work/github/charlas/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "userspace.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
