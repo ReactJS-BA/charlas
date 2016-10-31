@@ -13,6 +13,12 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case LOGOUT:
+        return {
+            ...state,
+            issues : [],
+            repos : []
+        };
     case ISSUES_REQUEST :
         return {
             ...state,
@@ -26,7 +32,7 @@ export default function reducer(state = initialState, action = {}) {
     case REPOS_REQUEST :
         return {
             ...state,
-            issues : []
+            repos : []
         };
     case REPOS_RESPONSE :
         return {

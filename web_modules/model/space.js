@@ -6,6 +6,8 @@ export const SPACE_ADD_REQUEST   = 'module/github/space/add/request'
 export const SPACE_ADD_RESPONSE  = 'module/github/space/add/response'
 export const SPACE_ADD_FAIL      = 'module/github/space/add/fail'
 
+import { LOGOUT } from 'model/user'
+
 const initialState = {
   items : [],
 }
@@ -26,6 +28,7 @@ export default function reducer(state = initialState, action = {}) {
                 value : item.attributes.description,
             }))
         };
+    case LOGOUT :
     case SPACE_LIST_FAIL :
         return {
             ...state,

@@ -5,7 +5,7 @@ import { load_repos, load_issues } from 'controller/github';
 
 const Charlas = ({gh}) =>
   <div>
-    <h3> Propuestas </h3>
+    <h3> Usuarios Registrados </h3>
     <ul>
        { gh.issues.map(e=>
          <li key={e.number}>
