@@ -16150,7 +16150,7 @@ webpackJsonp([0],[
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var base = "http://localhost:1337";
+	var base = "http://user.space";
 	
 	var urls = {
 	    dashboard: function dashboard(token) {
