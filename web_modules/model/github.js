@@ -5,6 +5,7 @@ export const REPOS_FAIL      = 'module/github/repos/fail'
 export const ISSUES_REQUEST  = 'module/github/issues/request'
 export const ISSUES_RESPONSE = 'module/github/issues/response'
 export const ISSUES_FAIL     = 'module/github/issues/fail'
+import { LOGOUT } from 'model/user'
 
 const initialState = {
   issues : [],
